@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
-const JWT_SECRET = "your_jwt_secret_key"; // ndrysho më vonë në .env
+const JWT_SECRET = "lab1";
 
 // Register
 router.post('/register', async (req, res) => {

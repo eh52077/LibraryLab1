@@ -1,21 +1,28 @@
-const Book = require('../models/Book');
+const db = require('../config/db');
 
 // CREATE BOOK
 exports.createBook = async (req, res) => {
   try {
-    const { title, author, year } = req.body;
+    const { title, author, available } = req.body;
 
-    const book = new Book({
+    if (!title || !author) {
+      return res.status(400).json({ message: "Title and author required" });
+    }
+
+    const [result] = await db.query(
+      "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
+      [title, author, available || 1]
+    );
+
+    res.status(201).json({
+      id: result.insertId,
       title,
       author,
-      year,
-      user: req.user.id
+      available: available || 1
     });
 
-    const savedBook = await book.save();
-    res.status(201).json(savedBook);
-
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error creating book' });
   }
 };
@@ -23,7 +30,7 @@ exports.createBook = async (req, res) => {
 // GET ALL BOOKS
 exports.getBooks = async (req, res) => {
   try {
-    const books = await Book.find({ user: req.user.id });
+    const [books] = await db.query("SELECT * FROM books");
     res.json(books);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching books' });
@@ -33,7 +40,7 @@ exports.getBooks = async (req, res) => {
 // DELETE BOOK
 exports.deleteBook = async (req, res) => {
   try {
-    await Book.findByIdAndDelete(req.params.id);
+    await db.query("DELETE FROM books WHERE id = ?", [req.params.id]);
     res.json({ message: 'Book deleted' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting book' });
@@ -43,13 +50,14 @@ exports.deleteBook = async (req, res) => {
 // UPDATE BOOK
 exports.updateBook = async (req, res) => {
   try {
-    const updatedBook = await Book.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
+    const { title, author, available } = req.body;
+
+    await db.query(
+      "UPDATE books SET title = ?, author = ?, available = ? WHERE id = ?",
+      [title, author, available, req.params.id]
     );
 
-    res.json(updatedBook);
+    res.json({ message: 'Book updated' });
   } catch (error) {
     res.status(500).json({ message: 'Error updating book' });
   }
