@@ -4,6 +4,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
+import Books from './pages/Books';
+import BookDetails from './pages/BookDetails';
 
 function App() {
   return (
@@ -13,6 +15,10 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/books" element={<Books />}/>
+        <Route path="/books/:id" element={<Books />}/>
+
         <Route path="/" element={<Login />} /> {/* redirect basic */}
       </Routes>
     </Router>

@@ -20,12 +20,12 @@ exports.borrowBook = async (req, res) => {
       return res.status(400).json({ message: 'Book not available' });
     }
 
-    // Shto ne borrows
-    await db.query(
-      'INSERT INTO borrows (user_id, book_id) VALUES (?, ?)',
-      [userId, book_id]
-    );
 
+   // Insert borrow record
+     await db.query(
+       'INSERT INTO borrows (user_id, book_id, status, borrow_date) VALUES (?, ?, "borrowed", NOW())',
+       [userId, book_id]
+    );
     // Ule available
     await db.query(
       'UPDATE books SET available = available - 1 WHERE id = ?',

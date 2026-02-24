@@ -10,10 +10,10 @@ exports.findByEmail = async (email) => {
 };
 
 // Krijo user të ri
-exports.createUser = async (username, email, hashedPassword) => {
+exports.createUser = async (username, email, hashedPassword,role='user') => {
   const [result] = await db.query(
-    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-    [username, email, hashedPassword]
+    'INSERT INTO users (username, email, password,role) VALUES (?, ?, ?,?)',
+    [username, email, hashedPassword,role]
   );
   return result;
 };
@@ -21,7 +21,7 @@ exports.createUser = async (username, email, hashedPassword) => {
 // Gjej user sipas ID
 exports.findById = async (id) => {
   const [rows] = await db.query(
-    'SELECT id, username, email FROM users WHERE id = ?',
+    'SELECT id, username, email,role FROM users WHERE id = ?',
     [id]
   );
   return rows[0];
