@@ -3,21 +3,23 @@ const db = require('../config/db');
 // CREATE BOOK
 exports.createBook = async (req, res) => {
   try {
-    const { title, author, available } = req.body;
+    const { title, author,language,image, available } = req.body;
 
-    if (!title || !author) {
-      return res.status(400).json({ message: "Title and author required" });
+    if (!title || !author || !language || !image) {
+      return res.status(400).json({ message: "Title,author.language and image are required" });
     }
 
     const [result] = await db.query(
-      "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
-      [title, author, available || 1]
+      "INSERT INTO books (title, author,language,image,available) VALUES (?,?,?,?,?)",
+      [title,author,language,image,available || 1]
     );
 
     res.status(201).json({
       id: result.insertId,
       title,
       author,
+      language,
+      image,
       available: available || 1
     });
 
@@ -50,11 +52,11 @@ exports.deleteBook = async (req, res) => {
 // UPDATE BOOK
 exports.updateBook = async (req, res) => {
   try {
-    const { title, author, available } = req.body;
+    const { title,author,language ,image,available } = req.body;
 
     await db.query(
-      "UPDATE books SET title = ?, author = ?, available = ? WHERE id = ?",
-      [title, author, available, req.params.id]
+      "UPDATE books SET title=?, author=?,language=?,image=?,available=? WHERE id = ?",
+      [title, author,language,image, available, req.params.id]
     );
 
     res.json({ message: 'Book updated' });

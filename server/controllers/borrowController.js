@@ -19,6 +19,16 @@ exports.borrowBook = async (req, res) => {
     if (books[0].available <= 0) {
       return res.status(400).json({ message: 'Book not available' });
     }
+    
+    // Kontrollo nëse user e ka huazuar tashmë librin
+const [existingBorrow] = await db.query(
+  'SELECT * FROM borrows WHERE user_id = ? AND book_id = ? AND status = "borrowed"',
+  [userId, book_id]
+);
+
+if (existingBorrow.length > 0) {
+  return res.status(400).json({ message: 'You already borrowed this book' });
+}
 
 
    // Insert borrow record
