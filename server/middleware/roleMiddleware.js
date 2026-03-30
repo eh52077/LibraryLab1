@@ -1,7 +1,7 @@
 const roleMiddleware = (requiredRole) => {
   return (req, res, next) => {
 
-    // Kontrollo nëse user ekziston
+    // Kontrollo nese user ekziston
     if (!req.user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }

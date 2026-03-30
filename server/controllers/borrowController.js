@@ -6,7 +6,7 @@ exports.borrowBook = async (req, res) => {
     const userId = req.user.id;
     const { book_id } = req.body;
 
-    // Kontrollo nëse libri ekziston dhe ka kopje
+    // Kontrollo nese libri ekziston dhe ka kopje
     const [books] = await db.query(
       'SELECT * FROM books WHERE id = ?',
       [book_id]
@@ -20,7 +20,7 @@ exports.borrowBook = async (req, res) => {
       return res.status(400).json({ message: 'Book not available' });
     }
     
-    // Kontrollo nëse user e ka huazuar tashmë librin
+    // Kontrollo nese user e ka huazuar tashme librin
 const [existingBorrow] = await db.query(
   'SELECT * FROM borrows WHERE user_id = ? AND book_id = ? AND status = "borrowed"',
   [userId, book_id]
